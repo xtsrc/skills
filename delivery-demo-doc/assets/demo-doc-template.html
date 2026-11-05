@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{系统名} 专业交付手册 · {业务对象}全流程操作闭环</title>
+<style>
+  :root{--ink:#18212f;--blue:#155e9c;--blue2:#2e86d9;--teal:#0e8f8f;--amber:#c07b12;--rose:#bb4430;--line:#d7dfeb;--bg:#f2f6fa;--card:#fff;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif;color:var(--ink);line-height:1.72;background:var(--bg)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px 60px}
+  header.hero{background:linear-gradient(120deg,#0d3a63,#155e9c 55%,#0e8f8f);color:#fff;padding:38px 28px 30px}
+  .hero-in{max-width:1120px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:29px}
+  .hero p{margin:4px 0;opacity:.92;font-size:14.5px}
+  .envbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .env{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);border-radius:8px;padding:7px 14px;font-size:13px}
+  .env b{margin-right:6px}
+  nav.tabs{position:sticky;top:0;z-index:50;background:#0d3a63}
+  .tabs-in{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;gap:4px;padding:8px 28px}
+  .tabs a{color:#dbeafe;text-decoration:none;font-size:14px;padding:6px 14px;border-radius:16px;white-space:nowrap}
+  .tabs a:hover,.tabs a.on{background:var(--blue2);color:#fff}
+  h2{font-size:21px;color:var(--blue);margin:44px 0 6px;padding-left:12px;border-left:6px solid var(--blue2)}
+  h3{font-size:16.5px;color:#1d4f7c;margin:26px 0 6px}
+  p{margin:8px 0;text-align:justify}
+  .lead{color:#42536b;font-size:14px}
+  .board{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0;box-shadow:0 6px 18px rgba(21,94,156,.07)}
+  .track{display:flex;overflow-x:auto;padding:6px 0 2px}
+  .st{flex:1;min-width:104px;text-align:center;padding:10px 6px 12px;cursor:pointer;border-radius:10px}
+  .st:hover{background:#eaf3fc}
+  .st .dot{width:34px;height:34px;border-radius:50%;background:#c6d5e4;color:#0d3a63;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;border:3px solid #fff;box-shadow:0 0 0 2px #c6d5e4}
+  .st.done .dot{background:var(--teal);color:#fff;box-shadow:0 0 0 2px var(--teal)}
+  .st.cur .dot{background:var(--amber);color:#fff;box-shadow:0 0 0 3px #f3c77b;transform:scale(1.12)}
+  .st .nm{font-size:12.5px;font-weight:600;color:#2c4f70}
+  .st:not(:last-child)::after{content:"";display:block;height:3px;background:#c6d5e4;margin:-46px auto 0;position:relative;top:24px;width:60%}
+  .hud{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+  .chip{background:#eef4fb;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:13px}
+  .state{background:var(--blue);color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600}
+  .bar{flex:1;min-width:160px;height:10px;background:#e2ebf4;border-radius:6px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue2),var(--teal))}
+  .navbtn{background:var(--blue2);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13.5px;cursor:pointer;font-family:inherit}
+  .navbtn:disabled{background:#b9c8d8;cursor:not-allowed}
+  .story{display:flex;gap:14px;background:linear-gradient(120deg,#fffaf0,#fdf3dd);border:1px solid #eed9a8;border-radius:12px;padding:14px 18px;margin:14px 0}
+  .story .avatar{font-size:30px}
+  .story .who{font-weight:700;color:#8a5a10;font-size:13.5px}
+  .story .say{font-size:14.5px;color:#5c430f}
+  .stage{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 26px}
+  .stage.on{display:block}
+  .stagelabel{font-size:12px;background:var(--blue2);color:#fff;border-radius:10px;padding:2px 10px}
+  .blk{margin:16px 0 6px;font-size:14px}
+  .blk .t{display:inline-block;font-weight:700;color:#fff;border-radius:6px;padding:1px 10px;margin-right:8px;font-size:12.5px}
+  .t.ui{background:var(--blue2)}.t.sys{background:var(--teal)}.t.term{background:#7c5cb0}
+  ol.ops{margin:8px 0 4px;padding-left:0;list-style:none;counter-reset:op}
+  ol.ops li{counter-increment:op;position:relative;padding:7px 0 7px 40px;border-bottom:1px dashed #e4ebf3;font-size:14px}
+  ol.ops li::before{content:counter(op);position:absolute;left:0;top:9px;width:26px;height:26px;border-radius:50%;background:#eaf3fc;color:var(--blue);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px}
+  kbd{background:#0d3a63;color:#eaf6ff;border-radius:5px;padding:1px 8px;font-size:12.5px;font-family:inherit;white-space:nowrap}
+  .terms{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .term{background:#f3eefa;border:1px solid #d9cdf0;border-radius:8px;padding:6px 12px;font-size:12.5px;color:#4b3568}
+  .term b{color:#6b4bb0}
+  details{border:1px solid var(--line);border-radius:8px;margin:8px 0;background:#fbfdff}
+  details summary{cursor:pointer;padding:9px 14px;font-size:13.5px;font-weight:600;color:#1d4f7c}
+  details .a{padding:9px 16px;font-size:13.5px;color:#33465e}
+  .loopnote{background:#fff7e8;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:9px 14px;font-size:13.5px;color:#7a5a17;margin-top:12px}
+  .branch{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:10px;padding:14px 18px;margin:12px 0}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13px;background:#fff}
+  th{background:var(--blue);color:#fff}
+  th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top;text-align:left}
+  .rolebtns{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .rolebtn{border:1.5px solid var(--blue2);background:#fff;color:var(--blue);border-radius:18px;padding:5px 16px;font-size:13.5px;cursor:pointer;font-family:inherit}
+  .rolebtn.on{background:var(--blue2);color:#fff}
+  .rolepane{display:none}.rolepane.on{display:block}
+  .fngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;margin:16px 0}
+  .fncard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .fnhead{display:flex;align-items:center;gap:8px;font-size:15px}
+  .fnid{background:var(--blue2);color:#fff;border-radius:6px;font-size:11px;padding:1px 7px;font-weight:700}
+  .fnst{margin-left:auto;font-size:11px;color:#4d6b8f;background:#eef4fb;border:1px solid var(--line);border-radius:10px;padding:1px 9px;white-space:nowrap}
+  .fndesc{font-size:13px;color:#42536b;margin:7px 0 4px}
+  .key{background:#e8f2fb;border-left:4px solid var(--blue2);padding:10px 16px;font-size:13.5px;border-radius:0 8px 8px 0;margin:14px 0}
+  footer{color:#7d8ea1;font-size:12.5px;text-align:center;margin-top:44px}
+  @media print{body{background:#fff;font-size:12px}nav.tabs,.navbtn{display:none}.stage,.rolepane{display:block!important;page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="hero-in">
+  <h1>{系统名} 专业交付手册 · {业务对象}全流程操作闭环</h1>
+  <p>{一句话副题：跟着一个真实对象走完主线，每个站点对应测试环境的真实页面与按钮}</p>
+  <div class="envbar">
+    <div class="env"><b>测试环境</b>{测试环境地址}</div>
+    <div class="env"><b>测试账号</b>{账号 / 密码}</div>
+    <div class="env"><b>适用对象</b>{使用方角色} · 甲方功能验收人员</div>
+    <div class="env"><b>版本</b>V1.0 · {日期}</div>
+  </div>
+</div></header>
+<nav class="tabs"><div class="tabs-in">
+  <a href="#s1">① 主线沙盘</a><a href="#s2">② 支线回路</a><a href="#s3">③ 角色速查</a><a href="#s4">④ 系统功能说明</a><a href="#s5">⑤ 环境与确认清单</a>
+</div></nav>
+<div class="wrap">
+
+<h2 id="s1">① 主线沙盘：跟着 {主角名} 的{业务对象}走闭环</h2>
+<p class="lead">点击站点开始。每站四块内容：界面操作 → 系统在做什么 → 名词与功能 → 常见问题。</p>
+<div class="board">
+  <div class="track" id="track">
+    <!-- 按主线复制 .st 节点：data-i 递增，dot=序号，nm=站名，fr=界面语言名 -->
+    <div class="st" data-i="0"><div class="dot">1</div><div class="nm">{站点1}</div><div class="fr">{Fr}</div></div>
+    <div class="st" data-i="1"><div class="dot">2</div><div class="nm">{站点2}</div><div class="fr">{Fr}</div></div>
+  </div>
+  <div class="hud">
+    <span class="state" id="stateChip">{状态0}</span>
+    <span class="chip">{关键标识} <b>{值}</b></span>
+    <span class="chip">{计时项} <b id="slaChip">{说明0}</b></span>
+    <div class="bar"><i id="bar"></i></div>
+    <button class="navbtn" id="prevBtn">上一站</button>
+    <button class="navbtn" id="nextBtn">下一站 →</button>
+  </div>
+</div>
+<div class="story"><div class="avatar">🙍🏾‍♀️</div><div>
+  <div class="who">故事主角：{主角} · {身份}</div>
+  <div class="say">"{一句话诉求}"</div>
+</div></div>
+
+<section class="stage on" id="stg0">
+  <h3><span class="stagelabel">站点 1</span>{站名}</h3>
+  <div class="story"><div class="avatar">☎️</div><div><div class="who">现在你是：{角色}</div><div class="say">{一句场景}</div></div></div>
+  <div class="blk"><span class="t ui">界面操作</span></div>
+  <ol class="ops">
+    <li>{步骤：打开哪里 → 点哪个按钮(kbd) → 预期看到什么}</li>
+  </ol>
+  <div class="blk"><span class="t sys">系统在做什么</span></div>
+  <p style="font-size:13.5px">{自动行为与规则，不写代码路径}</p>
+  <div class="blk"><span class="t term">名词与功能</span></div>
+  <div class="terms"><div class="term"><b>{术语}</b>{一句话}</div></div>
+  <details><summary>常见问题：{疑问}</summary><div class="a">{答案}</div></details>
+  <div class="loopnote"><b>闭环去向</b> → {下一站或支线}</div>
+</section>
+
+<h2 id="s2">② 支线回路：每条支线怎么回到主线</h2>
+<div class="branch"><h3>支线① {名称}</h3>
+  <div class="path"><b>触发</b>：{条件} → <b>操作</b>：{按钮与规则} → <b>系统</b>：{自动行为} → <b>回到</b>：主线第 {N} 站。</div>
+  <details><summary>常见问题：{疑问}</summary><div class="a">{答案}</div></details>
+</div>
+
+<h2 id="s3">③ 角色速查</h2>
+<div class="rolebtns">
+  <button class="rolebtn on" data-r="r0">{角色1}</button>
+  <button class="rolebtn" data-r="r1">{角色2}</button>
+</div>
+<section class="rolepane on" id="r0"><table>
+  <tr><th style="width:140px">项</th><th>内容</th></tr>
+  <tr><td>每天怎么开始</td><td>{入口}</td></tr>
+  <tr><td>高频按钮</td><td>{按钮清单}</td></tr>
+  <tr><td>不能做</td><td>{边界}</td></tr>
+  <tr><td>常见问题</td><td>{要点}</td></tr>
+</table></section>
+
+<h2 id="s4">④ 系统功能说明</h2>
+<div class="fngrid">
+  <div class="fncard"><div class="fnhead"><span class="fnid">F01</span><b>{功能名}</b><span class="fnst">{对应站点}</span></div>
+    <div class="fndesc">{一句话功能定义}</div>
+    <details><summary>使用场景</summary><div class="a">{谁在什么情况下用}</div></details>
+    <details><summary>功能确认</summary><div class="a">{可观察的系统行为效果}</div></details>
+  </div>
+</div>
+<table><tr><th>✓</th><th>功能</th><th>确认方式</th><th>对应位置</th></tr>
+  <tr><td>☐</td><td>{功能}</td><td>{确认方式}</td><td>{站点/支线}</td></tr>
+</table>
+
+<h2 id="s5">⑤ 环境说明与功能确认清单</h2>
+<table>
+  <tr><th colspan="2">环境与账号</th></tr>
+  <tr><td>测试环境</td><td>{地址}</td></tr>
+  <tr><td>测试账号</td><td>{账号说明}</td></tr>
+  <tr><td>示例数据</td><td>{预置说明}</td></tr>
+</table>
+<table>
+  <tr><th>检查点</th><th>操作</th><th>系统表现</th><th>闭环去向</th></tr>
+  <tr><td>{检查点}</td><td>{操作}</td><td>{表现}</td><td>{去向}</td></tr>
+</table>
+<div class="key"><b>阅读建议</b>：主线顺序阅读，支线重点看升级与超时，最后按角色速查对号入座。</div>
+<footer>{系统名} 专业交付手册 V1.0 · {日期} · 基于测试环境与系统功能整理</footer>
+</div>
+<script>
+(function(){
+  var sts=document.querySelectorAll('.st'),panes=document.querySelectorAll('.stage');
+  var N=sts.length,cur=0;
+  var states=[/* 每站状态名 */], slas=[/* 每站计时说明 */];
+  var chip=document.getElementById('stateChip'),sla=document.getElementById('slaChip'),bar=document.getElementById('bar');
+  var prev=document.getElementById('prevBtn'),next=document.getElementById('nextBtn');
+  function render(){
+    sts.forEach(function(s,i){s.classList.toggle('cur',i===cur);s.classList.toggle('done',i<cur);});
+    panes.forEach(function(p,i){p.classList.toggle('on',i===cur);});
+    if(states[cur])chip.textContent=states[cur];
+    if(slas[cur])sla.textContent=slas[cur];
+    bar.style.width=((cur+1)/N*100)+'%';
+    prev.disabled=(cur===0);next.disabled=(cur===N-1);
+    var on=document.querySelector('.stage.on');if(on)on.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  sts.forEach(function(s){s.addEventListener('click',function(){cur=+this.dataset.i;render();});});
+  prev.addEventListener('click',function(){if(cur>0){cur--;render();}});
+  next.addEventListener('click',function(){if(cur<N-1){cur++;render();}});
+  var rbs=document.querySelectorAll('.rolebtn'),rps=document.querySelectorAll('.rolepane');
+  rbs.forEach(function(b){b.addEventListener('click',function(){rbs.forEach(function(x){x.classList.remove('on');});rps.forEach(function(x){x.classList.remove('on');});b.classList.add('on');document.getElementById(b.dataset.r).classList.add('on');});});
+  render();
+})();
+</script>
+</body>
+</html>
