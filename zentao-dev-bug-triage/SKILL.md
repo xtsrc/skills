@@ -65,10 +65,11 @@ metadata:
    - 可能跨仓库的调用链
 3. 将相同页面、相同接口或相同代码改动范围的 Bug 归为同一类。
 4. 同一批内必须选择互不冲突的 Bug；高优先级 Bug 与已选 Bug 范围重叠时跳过，并按优先级补选下一个不同类 Bug。
-5. 明确每个 Bug 的主项目：
+5. 明确每个 Bug 的主项目，并同时记录项目名和 Codex 项目 ID：
    - `D:\dev\workspace\znuny` → 项目名 `znuny`
    - `D:\dev\workspace\resident-ui` → 项目名 `resident-ui`
    - `D:\dev\workspace\resident-services` → 项目名 `resident-services`
+   - 创建对话框前必须读取当前项目列表，按目标项目路径/名称解析唯一 `projectId`；不得默认沿用当前线程、commander 或其他调度项目的 `projectId`。
 6. 每批使用同一个日期分支，不在 Bug 之间拆分分支：
    - 分支名：`bugfix/YYYYMMDD`
    - `znuny` 基线：`origin/master`
@@ -81,8 +82,11 @@ metadata:
    - `znuny` 使用现有项目目录；如 Windows 检出失败，运行 `D:\dev\workspace\fix-znuny-checkout.cmd` 修复。
 8. 用户要求创建对话框时：
    - 一个 Bug 一个对话框，放入主影响范围对应项目。
+   - 创建前必须在全局清单该 Bug 记录中写入主项目名与解析出的 Codex `projectId`。
+   - 创建对话框时必须显式传入该 `projectId`，不得为空、不得使用 commander 项目。
    - 对话框标题命名为 `bugfix` + 禅道 Bug ID，例如 `bugfix50202`。
    - 任务内容写完整 Bug ID、标题、项目路径、统一分支和当前阶段边界。
+   - 创建成功后必须立刻核对标题、`cwd` 和 `projectId` 三者均正确；任何一项不符时向用户说明并停止该 Bug 后续处理，不得静默继续。
    - 主项目为 `resident-services` 但涉及页面时，同时说明需核对 `resident-ui`。
    - 创建失败不得静默继续，必须向用户说明。
 
